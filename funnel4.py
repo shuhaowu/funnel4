@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from html.parser import HTMLParser
 import argparse
+from datetime import datetime, timezone
 import logging
 import os
 import os.path
@@ -55,6 +56,7 @@ class Website(object):
     self.config.update(config)
 
     self._jinja2_env = Environment(loader=FileSystemLoader(searchpath=os.path.join(self.basedir, "src")))
+    self._jinja2_env.globals["now"] = datetime.utcnow().replace(tzinfo=timezone.utc, microsecond=0)
 
     self._logger = logging.getLogger("funnel4")
     self._logger.setLevel(logging.DEBUG)
@@ -95,7 +97,12 @@ class Website(object):
 
     # Render the paginated main feed first.
     all_posts = blog_posts.pop("__all__")
+    all_posts = [post for post in all_posts if not post.get("draft")]
+
     all_posts_paginated = [all_posts[i:i+n] for i in range(0, len(all_posts), n)]
+
+    if len(all_posts_paginated) == 0:
+      all_posts_paginated = [[]]
 
     # Render each page in a loop.
     for i, posts_for_single_page in enumerate(all_posts_paginated):
