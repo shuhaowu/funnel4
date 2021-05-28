@@ -181,7 +181,7 @@ class Website(object):
 
 
     for _, posts in blog_posts.items():
-      posts.sort(key=lambda post: post["created_at"])
+      posts.sort(key=lambda post: post["created_at"], reverse=True)
 
     return blog_posts
 
