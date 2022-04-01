@@ -5,7 +5,7 @@
   <body>
     <ul>
       {% for post in posts %}
-      <li><a href="{{ post.link }}">{{ post.title }} - {{ post.created_at }}</a></li>
+      <li><a href="{{ post.href }}">{{ post.title }} - {{ post.created_at }}</a></li>
       {% endfor %}
     </ul>
     {% if page_num > 1 %}
